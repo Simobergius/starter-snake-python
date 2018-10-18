@@ -29,7 +29,7 @@ def start():
     # TODO: Do things with data
     
     print "Starting game %s" % data["game"]["id"]
-    print json.dumps(data, sort_keays=True, indent=4)
+    print json.dumps(data, sort_keys=True, indent=4)
     return StartResponse("#00ff00")
 
 
@@ -40,6 +40,7 @@ def move():
     
     forbidden_dirs = checkWrongDirs(data)
     
+    directions = [ 'up', 'down', 'left', 'right' ]
     direction = random.choice(directions)
 
     print "Moving %s" % direction
