@@ -34,8 +34,6 @@ def start():
 @bottle.post('/move')
 def move():
     data = bottle.request.json
-    print "You:"
-    print json.dumps(data["you"], sort_keys=True, indent=4)
     # TODO: Do things with data
     
     head = data["you"]["body"][0]
