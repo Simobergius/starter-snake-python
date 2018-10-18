@@ -28,9 +28,8 @@ def start():
 
     # TODO: Do things with data
     
-    pp = pprint.PrettyPrinter(indent=4)
     print "Starting game %s" % data["game"]["id"]
-    print pp.pprint(data)
+    print print(json.dumps(data, sort_keays=True, indent=4))
     return StartResponse("#00ff00")
 
 
@@ -64,28 +63,28 @@ def checkWrongDirs(data):
         forbidden_spaces.extend(snakes["body"])
     
     #Left
-    if forbidden_spaces.contains({
+    if {
         "x": head["x"] - 1,
         "y": head["y"]
-    }):
+    } in forbidden_spaces:
         forbidden_dirs.extend('left')
     #Right
-    if forbidden_spaces.contains({
+    if {
         "x": head["x"] + 1,
         "y": head["y"]
-    }):
+    } in forbidden_spaces:
         forbidden_dirs.extend('right')
     #Up
-    if forbidden_spaces.contains({
+    if {
         "x": head["x"],
         "y": head["y"] - 1
-    }):
+    } in forbidden_spaces:
         forbidden_dirs.extend('up')
     #Down
-    if forbidden_spaces.contains({
+    if {
         "x": head["x"],
         "y": head["y"] + 1
-    }):
+    } in forbidden_spaces:
         forbidden_dirs.extend('down')
     return forbidden_dirs
 
