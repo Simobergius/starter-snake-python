@@ -110,7 +110,7 @@ def chooseDir(data, forbidden_dirs):
 def findNearestApple(data):
     head = data["you"]["body"][0]
     nearestApple = data["board"]["food"][0]
-    distance = calculateDistance(nearestApple, head)
+    shortestDistance = calculateDistance(nearestApple, head)
     for apple in data["board"]["food"]:
         if calculateDistance(apple, head) < shortestDistance:
             nearestApple = apple
