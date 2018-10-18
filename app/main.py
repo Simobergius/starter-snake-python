@@ -47,7 +47,7 @@ def move():
         directions.remove(dir)
     
     #direction = random.choice(directions)
-    direction = chooseDir(data, forbidden_dirs)
+    direction = chooseDir(data, directions)
 
     print "Moving %s" % direction
     return MoveResponse(direction)
@@ -97,17 +97,23 @@ def checkWrongDirs(data):
         forbidden_dirs.extend(['down'])
     return forbidden_dirs
 
-def chooseDir(data, forbidden_dirs):
+def chooseDir(data, dirs):
     head = data["you"]["body"][0]
     nearestApple = findNearestApple(data)
     dirsToApple = findCompassDirFromPointToPoint(head, nearestApple)
+    
     print "Dirs to neares apple"
     print dirsToApple
-    for dir in forbidden_dirs:
-        if dir in dirsToApple:
-            dirsToApple.remove(dir)
     
-    return random.choice(dirsToApple)
+    goodDirs = []
+    for dir in dirs:
+        if dir in dirsToApple:
+            goodDirs.extend(dir)
+    
+    if size(goodDirs) > 0:
+        return random.choice(goodDirs)
+    else:
+        return random.choice(dirs)
     
 def findNearestApple(data):
     head = data["you"]["body"][0]
