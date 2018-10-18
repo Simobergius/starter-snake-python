@@ -38,8 +38,8 @@ def move():
     print json.dumps(data["you"], sort_keys=True, indent=4)
     # TODO: Do things with data
     
-    head = data["you"].body[0]
-    next_from_head = data["you"].body[1]
+    head = data["you"]["body"][0]
+    next_from_head = data["you"]["body"][1]
     
     if next_from_head.x > head.x:
         #Dont go right
