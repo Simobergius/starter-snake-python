@@ -41,16 +41,16 @@ def move():
     head = data["you"]["body"][0]
     next_from_head = data["you"]["body"][1]
     
-    if next_from_head.x > head.x:
+    if next_from_head["x"] > head["x"]:
         #Dont go right
         forbidden_dir = 'right'
-    elif next_from_head.x < head.x:
+    elif next_from_head["x"] < head["x"]:
         #Dont go left
         forbidden_dir = 'left'
-    elif next_from_head.y > head.y:
+    elif next_from_head["y"] > head["y"]:
         #Dont go down
         forbidden_dir = 'down'
-    elif next_from_head.y < head.y:
+    elif next_from_head["y"] < head["y"]:
         #Dont go up
         forbidden_dir = 'up'
         
