@@ -57,6 +57,7 @@ def end():
     data = bottle.request.json
 
     # TODO: Do things with data
+    print json.dumps(data, sort_keys=True, indent=4)
 
     print "Game %s ended" % data["game"]["id"]
 
@@ -79,7 +80,7 @@ def checkWrongDirs(data):
     if {
         "x": head["x"] + 1,
         "y": head["y"]
-    } in forbidden_spaces or head["x"] == data["board"]["width"]:
+    } in forbidden_spaces or head["x"] == data["board"]["width"] - 1:
         forbidden_dirs.extend(['right'])
     #Up
     if {
@@ -91,7 +92,7 @@ def checkWrongDirs(data):
     if {
         "x": head["x"],
         "y": head["y"] + 1
-    } in forbidden_spaces or head["y"] == data["board"]["height"]:
+    } in forbidden_spaces or head["y"] == data["board"]["height"] - 1:
         forbidden_dirs.extend(['down'])
     return forbidden_dirs
 
