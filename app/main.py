@@ -101,9 +101,11 @@ def chooseDir(data, forbidden_dirs):
     head = data["you"]["body"][0]
     nearestApple = findNearestApple(data)
     dirsToApple = findCompassDirFromPointToPoint(head, nearestApple)
-    
+    print "Dirs to neares apple"
+    print dirsToApple
     for dir in forbidden_dirs:
-        dirsToApple.remove(dir)
+        if dir in dirsToApple:
+            dirsToApple.remove(dir)
     
     return random.choice(dirsToApple)
     
