@@ -110,7 +110,7 @@ def chooseDir(data, dirs):
         if dir in dirsToApple:
             goodDirs.extend(dir)
     
-    if size(goodDirs) > 0:
+    if len(goodDirs) > 0:
         return random.choice(goodDirs)
     else:
         return random.choice(dirs)
