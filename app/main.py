@@ -128,14 +128,14 @@ def calculateDistance(pointa, pointb):
 
 def findCompassDirFromPointToPoint(source, dest):
     directions = [ 'up', 'down', 'left', 'right' ]
-    if source["x"] >= dest["x"]:
+    if source["x"] <= dest["x"]:
         # Go Right
         directions.remove('left')
     else:
         # Go Left
         directions.remove('right')
         
-    if source["y"] >= dest["y"]:
+    if source["y"] <= dest["y"]:
         # Go down
         directions.remove('up')
     else:
