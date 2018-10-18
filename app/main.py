@@ -125,17 +125,17 @@ def findCompassDirFromPointToPoint(source, dest):
     directions = [ 'up', 'down', 'left', 'right' ]
     if source["x"] >= dest["x"]:
         # Go Right
-        directions.remove(['left'])
+        directions.remove('left')
     else:
         # Go Left
-        directions.remove(['right'])
+        directions.remove('right')
         
     if source["y"] >= dest["y"]:
         # Go down
-        directions.remove(['up'])
+        directions.remove('up')
     else:
         # Go up
-        directions.remove(['Down'])
+        directions.remove('Down')
     
     return directions
     
