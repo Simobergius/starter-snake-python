@@ -34,7 +34,7 @@ def start():
 @bottle.post('/move')
 def move():
     data = bottle.request.json
-    print json.dumps(data["board"], sort_keys=True, indent=4)
+    print json.dumps(data["you"], sort_keys=True, indent=4)
     # TODO: Do things with data
     
     directions = ['up', 'down', 'left', 'right']
