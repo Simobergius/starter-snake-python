@@ -73,25 +73,25 @@ def checkWrongDirs(data):
         "x": head["x"] - 1,
         "y": head["y"]
     } in forbidden_spaces:
-        forbidden_dirs.extend('left')
+        forbidden_dirs.extend(['left'])
     #Right
     if {
         "x": head["x"] + 1,
         "y": head["y"]
     } in forbidden_spaces:
-        forbidden_dirs.extend('right')
+        forbidden_dirs.extend(['right'])
     #Up
     if {
         "x": head["x"],
         "y": head["y"] - 1
     } in forbidden_spaces:
-        forbidden_dirs.extend('up')
+        forbidden_dirs.extend(['up'])
     #Down
     if {
         "x": head["x"],
         "y": head["y"] + 1
     } in forbidden_spaces:
-        forbidden_dirs.extend('down')
+        forbidden_dirs.extend(['down'])
     return forbidden_dirs
 
 # Expose WSGI app (so gunicorn can find it)
