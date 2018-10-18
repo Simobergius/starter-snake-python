@@ -108,8 +108,10 @@ def chooseDir(data, dirs):
     goodDirs = []
     for dir in dirs:
         if dir in dirsToApple:
-            goodDirs.extend(dir)
+            goodDirs.extend([dir])
     
+    print "GoodDirs:"
+    print goodDirs
     if len(goodDirs) > 0:
         return random.choice(goodDirs)
     else:
