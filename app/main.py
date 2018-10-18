@@ -135,7 +135,7 @@ def findCompassDirFromPointToPoint(source, dest):
         directions.remove('up')
     else:
         # Go up
-        directions.remove('Down')
+        directions.remove('down')
     
     return directions
     
