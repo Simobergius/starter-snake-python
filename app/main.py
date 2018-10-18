@@ -41,6 +41,9 @@ def move():
     forbidden_dirs = checkWrongDirs(data)
     
     directions = [ 'up', 'down', 'left', 'right' ]
+    for dir in forbidden_dirs:
+        directions.remove(dir)
+    
     direction = random.choice(directions)
 
     print "Moving %s" % direction
