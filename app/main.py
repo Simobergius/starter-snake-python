@@ -117,7 +117,10 @@ def findNearestApple(data):
         if calculateDistance(apple, head) < shortestDistance:
             nearestApple = apple
             shortestDistance = calculateDistance(apple, head)
-    
+    print "NearestApple:"
+    print nearestApple
+    print "Distance:"
+    print shortestDistance
     return nearestApple
     
 def calculateDistance(pointa, pointb):
