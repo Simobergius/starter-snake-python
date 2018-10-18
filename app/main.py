@@ -46,7 +46,8 @@ def move():
     for dir in forbidden_dirs:
         directions.remove(dir)
     
-    direction = random.choice(directions)
+    #direction = random.choice(directions)
+    direction = chooseDir(data, forbidden_dirs)
 
     print "Moving %s" % direction
     return MoveResponse(direction)
@@ -96,6 +97,48 @@ def checkWrongDirs(data):
         forbidden_dirs.extend(['down'])
     return forbidden_dirs
 
+def chooseDir(data, forbidden_dirs):
+    head = data["you"]["body"][0]
+    nearestApple = findNearestApple(data)
+    dirsToApple = findCompassDirFromPointToPoint(head, nearestApple)
+    
+    for dir in forbidden_dirs:
+        dirsToApple.remove(dir)
+    
+    return random.choice(dirsToApple)
+    
+def findNearestApple(data):
+    head = data["you"]["body"][0]
+    nearestApple = data["board"]["food"][0]
+    distance = calculateDistance(nearestApple, head)
+    for apple in data["board"]["food"]:
+        if calculateDistance(apple, head) < shortestDistance:
+            nearestApple = apple
+            shortestDistance = calculateDistance(apple, head)
+    
+    return nearestApple
+    
+def calculateDistance(pointa, pointb):
+    return abs(pointa["x"] - pointb["x"] + pointa["y"] - pointb["y"])
+
+def findCompassDirFromPointToPoint(source, dest):
+    directions = [ 'up', 'down', 'left', 'right' ]
+    if source["x"] >= dest["x"]:
+        # Go Right
+        directions.remove(['left'])
+    else:
+        # Go Left
+        directions.remove(['right'])
+        
+    if source["y"] >= dest["y"]:
+        # Go down
+        directions.remove(['up'])
+    else:
+        # Go up
+        directions.remove(['Down'])
+    
+    return directions
+    
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
 
