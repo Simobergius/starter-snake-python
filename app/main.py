@@ -2,6 +2,7 @@ import bottle
 import os
 import random
 import json
+import pprint
 
 from api import *
 
@@ -26,9 +27,10 @@ def start():
     )
 
     # TODO: Do things with data
-
+    
+    pp = pprint.PrettyPrinter(indent=4)
     print "Starting game %s" % data["game"]["id"]
-    print data
+    print pp.pprint(data)
     return StartResponse("#00ff00")
 
 
@@ -58,7 +60,7 @@ def checkWrongDirs(data):
     forbidden_spaces = []
     head = data["you"]["body"][0]
     
-    for snakes in data["snakes"]:
+    for snakes in data["board"]["snakes"]:
         forbidden_spaces.extend(snakes["body"])
     
     #Left
