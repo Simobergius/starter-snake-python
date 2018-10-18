@@ -72,25 +72,26 @@ def checkWrongDirs(data):
     if {
         "x": head["x"] - 1,
         "y": head["y"]
-    } in forbidden_spaces:
+    } in forbidden_spaces or head["x"] == 0:
         forbidden_dirs.extend(['left'])
+    
     #Right
     if {
         "x": head["x"] + 1,
         "y": head["y"]
-    } in forbidden_spaces:
+    } in forbidden_spaces or head["x"] == data["board"]["width"]:
         forbidden_dirs.extend(['right'])
     #Up
     if {
         "x": head["x"],
         "y": head["y"] - 1
-    } in forbidden_spaces:
+    } in forbidden_spaces or head["y"] == 0:
         forbidden_dirs.extend(['up'])
     #Down
     if {
         "x": head["x"],
         "y": head["y"] + 1
-    } in forbidden_spaces:
+    } in forbidden_spaces or head["y"] == data["board"]["height"]:
         forbidden_dirs.extend(['down'])
     return forbidden_dirs
 
