@@ -36,6 +36,23 @@ def move():
     data = bottle.request.json
     # TODO: Do things with data
     
+    forbidden_dirs = checkWrongDirs(data)
+    
+    direction = random.choice(directions)
+
+    print "Moving %s" % direction
+    return MoveResponse(direction)
+
+
+@bottle.post('/end')
+def end():
+    data = bottle.request.json
+
+    # TODO: Do things with data
+
+    print "Game %s ended" % data["game"]["id"]
+
+def checkWrongDirs(data):
     forbidden_dirs = []
     forbidden_spaces = []
     head = data["you"]["body"][0]
@@ -67,27 +84,7 @@ def move():
         "y": head["y"] + 1
     }):
         forbidden_dirs.extend('down')
-    
-    directions = ['up', 'down', 'left', 'right']
-    for dir in forbidden_dirs:
-        directions.remove(dir)
-    
-    direction = random.choice(directions)
-
-    print "Moving %s" % direction
-    return MoveResponse(direction)
-
-
-@bottle.post('/end')
-def end():
-    data = bottle.request.json
-
-    # TODO: Do things with data
-
-    print "Game %s ended" % data["game"]["id"]
-
-def checkWrongDirs(data):
-    
+    return forbidden_dirs
 
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
