@@ -36,26 +36,43 @@ def move():
     data = bottle.request.json
     # TODO: Do things with data
     
+    forbidden_dirs = []
+    forbidden_spaces = []
     head = data["you"]["body"][0]
-    next_from_head = data["you"]["body"][1]
     
-    if next_from_head["x"] > head["x"]:
-        #Dont go right
-        forbidden_dir = 'right'
-    elif next_from_head["x"] < head["x"]:
-        #Dont go left
-        forbidden_dir = 'left'
-    elif next_from_head["y"] > head["y"]:
-        #Dont go down
-        forbidden_dir = 'down'
-    elif next_from_head["y"] < head["y"]:
-        #Dont go up
-        forbidden_dir = 'up'
-        
+    for snakes in data["snakes"]:
+        forbidden_spaces.extend(snakes["body"])
+    
+    #Left
+    if forbidden_spaces.contains({
+        "x": head["x"] - 1,
+        "y": head["y"]
+    }):
+        forbidden_dirs.extend('left')
+    #Right
+    if forbidden_spaces.contains({
+        "x": head["x"] + 1,
+        "y": head["y"]
+    }):
+        forbidden_dirs.extend('right')
+    #Up
+    if forbidden_spaces.contains({
+        "x": head["x"],
+        "y": head["y"] - 1
+    }):
+        forbidden_dirs.extend('up')
+    #Down
+    if forbidden_spaces.contains({
+        "x": head["x"],
+        "y": head["y"] + 1
+    }):
+        forbidden_dirs.extend('down')
+    
     directions = ['up', 'down', 'left', 'right']
-    directions.remove(forbidden_dir)
+    for dir in forbidden_dirs:
+        directions.remove(dir)
+    
     direction = random.choice(directions)
-    direction == forbidden_dir
 
     print "Moving %s" % direction
     return MoveResponse(direction)
@@ -69,6 +86,8 @@ def end():
 
     print "Game %s ended" % data["game"]["id"]
 
+def checkWrongDirs(data):
+    
 
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
