@@ -39,6 +39,7 @@ def move():
     # TODO: Do things with data
     
     forbidden_dirs = checkWrongDirs(data)
+    print "Forbidden dirs: " + forbidden_dirs
     
     directions = [ 'up', 'down', 'left', 'right' ]
     for dir in forbidden_dirs:
