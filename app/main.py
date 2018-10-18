@@ -29,7 +29,7 @@ def start():
     # TODO: Do things with data
     
     print "Starting game %s" % data["game"]["id"]
-    print print(json.dumps(data, sort_keays=True, indent=4))
+    print json.dumps(data, sort_keays=True, indent=4)
     return StartResponse("#00ff00")
 
 
