@@ -28,6 +28,7 @@ def start():
     # TODO: Do things with data
 
     print "Starting game %s" % data["game"]["id"]
+    print data
     return StartResponse("#00ff00")
 
 
