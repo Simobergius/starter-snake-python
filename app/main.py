@@ -122,7 +122,7 @@ def checkWrongDirs(data):
 
 def chooseDir(data, dirs):
     head = data["you"]["body"][0]
-    nearestApple = findNearestApple(data)
+    nearestApple = findNearestApple(head, data["board"]["food"])
     dirsToApple = findCompassDirFromPointToPoint(head, nearestApple)
     
     print "Dirs to nearest apple"
@@ -140,11 +140,11 @@ def chooseDir(data, dirs):
     else:
         return random.choice(dirs)
     
-def findNearestApple(data):
+def findNearestApple(head, apples):
     head = data["you"]["body"][0]
-    nearestApple = data["board"]["food"][0]
+    nearestApple = apples[0]
     shortestDistance = calculateDistance(nearestApple, head)
-    for apple in data["board"]["food"]:
+    for apple in apples:
         if calculateDistance(apple, head) < shortestDistance:
             nearestApple = apple
             shortestDistance = calculateDistance(apple, head)
@@ -155,7 +155,7 @@ def findNearestApple(data):
     return nearestApple
     
 def calculateDistance(pointa, pointb):
-    return abs(pointa["x"] - pointb["x"] + pointa["y"] - pointb["y"])
+    return abs(pointa["x"] - pointb["x"]) + abs(pointa["y"] - pointb["y"])
 
 def findCompassDirFromPointToPoint(source, dest):
     directions = [ 'up', 'down', 'left', 'right' ]
@@ -168,11 +168,11 @@ def findCompassDirFromPointToPoint(source, dest):
         if 'right' in directions:
             directions.remove('right')
     else:
-        # We are on same X axis -> go straight left or right
-        if 'up' in directions:
-            directions.remove('up')
-        if 'down' in directions:
-            directions.remove('down')
+        # We are on same X axis -> go straight up or down
+        if 'left' in directions:
+            directions.remove('left')
+        if 'right' in directions:
+            directions.remove('right')
         
     if source["y"] < dest["y"]:
         # Go down
@@ -183,10 +183,11 @@ def findCompassDirFromPointToPoint(source, dest):
         if 'down' in directions:
             directions.remove('down')
     else:
-        if 'right' in directions:
-            directions.remove('right')
-        if 'left' in directions:
-            directions.remove('left')
+        # We are on same Y axis -> go straight left or right
+        if 'up' in directions:
+            directions.remove('up')
+        if 'down' in directions:
+            directions.remove('down')
     return directions
     
 # Expose WSGI app (so gunicorn can find it)
