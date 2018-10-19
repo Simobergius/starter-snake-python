@@ -74,22 +74,26 @@ def checkWrongDirs(data):
         if snake["id"] != data["you"]["id"]:
             if len(snake["body"]) >= len(data["you"]["body"]):
                 print "snake %s (%s) is larger -> avoid" % (snake["name"], snake["id"]
-                forbidden_spaces.append({
-                                            "x": snake["body"][0]["x"] - 1,
-                                            "y": snake["body"][0]["y"]
-                                        })
-                forbidden_spaces.append({
-                                            "x": snake["body"][0]["x"] + 1,
-                                            "y": snake["body"][0]["y"]
-                                        })
-                forbidden_spaces.append({
-                                            "x": snake["body"][0]["x"],
-                                            "y": snake["body"][0]["y"] - 1
-                                        })
-                forbidden_spaces.append({
-                                            "x": snake["body"][0]["x"],
-                                            "y": snake["body"][0]["y"] + 1
-                                        })
+                point = {
+                            "x": snake["body"][0]["x"] - 1,
+                            "y": snake["body"][0]["y"]
+                        }
+                forbidden_spaces.append(point)
+                point = {
+                            "x": snake["body"][0]["x"] + 1,
+                            "y": snake["body"][0]["y"]
+                        }
+                forbidden_spaces.append(point)
+                point = {
+                            "x": snake["body"][0]["x"],
+                            "y": snake["body"][0]["y"] - 1
+                        }
+                forbidden_spaces.append(point)
+                point = {
+                            "x": snake["body"][0]["x"],
+                            "y": snake["body"][0]["y"] + 1
+                        }
+                forbidden_spaces.append(point)
         
     #Left
     if {
