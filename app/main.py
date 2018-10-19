@@ -67,7 +67,7 @@ def checkWrongDirs(data):
     forbidden_spaces = []
     head = data["you"]["body"][0]
     
-    for snake in data["board"]["snake"]:
+    for snake in data["board"]["snakes"]:
         forbidden_spaces.extend(snake["body"])
         
         #Add forbidden spaces next to larger snake' heads
