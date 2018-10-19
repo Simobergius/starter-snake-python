@@ -58,7 +58,7 @@ def end():
     data = bottle.request.json
 
     # TODO: Do things with data
-    print json.dumps(data, sort_keys=True, indent=4)
+    print json.dumps(data["you"], sort_keys=True, indent=4)
 
     print "Game %s ended" % data["game"]["id"]
 
