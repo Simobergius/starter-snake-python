@@ -67,9 +67,29 @@ def checkWrongDirs(data):
     forbidden_spaces = []
     head = data["you"]["body"][0]
     
-    for snakes in data["board"]["snakes"]:
-        forbidden_spaces.extend(snakes["body"])
-    
+    for snake in data["board"]["snake"]:
+        forbidden_spaces.extend(snake["body"])
+        
+        #Add forbidden spaces next to larger snake' heads
+        if len(snake["body"]) >= len(data["you"]["body"]):
+            print "snake %s is larger -> avoid" % snake["name"]
+            forbidden_spaces.extend({
+                                        "x": snake["body"][0]["x"] - 1,
+                                        "y": snake["body"][0]["y"]
+                                    })
+            forbidden_spaces.extend({
+                                        "x": snake["body"][0]["x"] + 1,
+                                        "y": snake["body"][0]["y"]
+                                    })
+            forbidden_spaces.extend({
+                                        "x": snake["body"][0]["x"],
+                                        "y": snake["body"][0]["y"] - 1
+                                    })
+            forbidden_spaces.extend({
+                                        "x": snake["body"][0]["x"],
+                                        "y": snake["body"][0]["y"] + 1
+                                    })
+        
     #Left
     if {
         "x": head["x"] - 1,
