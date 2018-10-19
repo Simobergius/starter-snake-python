@@ -71,24 +71,25 @@ def checkWrongDirs(data):
         forbidden_spaces.extend(snake["body"])
         
         #Add forbidden spaces next to larger snake' heads
-        if len(snake["body"]) >= len(data["you"]["body"]):
-            print "snake %s is larger -> avoid" % snake["name"]
-            forbidden_spaces.extend({
-                                        "x": snake["body"][0]["x"] - 1,
-                                        "y": snake["body"][0]["y"]
-                                    })
-            forbidden_spaces.extend({
-                                        "x": snake["body"][0]["x"] + 1,
-                                        "y": snake["body"][0]["y"]
-                                    })
-            forbidden_spaces.extend({
-                                        "x": snake["body"][0]["x"],
-                                        "y": snake["body"][0]["y"] - 1
-                                    })
-            forbidden_spaces.extend({
-                                        "x": snake["body"][0]["x"],
-                                        "y": snake["body"][0]["y"] + 1
-                                    })
+        if snake["id"] != data["you"]["id"]:
+            if len(snake["body"]) >= len(data["you"]["body"]):
+                print "snake %s (%s) is larger -> avoid" % (snake["name"], snake["id"]
+                forbidden_spaces.extend({
+                                            "x": snake["body"][0]["x"] - 1,
+                                            "y": snake["body"][0]["y"]
+                                        })
+                forbidden_spaces.extend({
+                                            "x": snake["body"][0]["x"] + 1,
+                                            "y": snake["body"][0]["y"]
+                                        })
+                forbidden_spaces.extend({
+                                            "x": snake["body"][0]["x"],
+                                            "y": snake["body"][0]["y"] - 1
+                                        })
+                forbidden_spaces.extend({
+                                            "x": snake["body"][0]["x"],
+                                            "y": snake["body"][0]["y"] + 1
+                                        })
         
     #Left
     if {
@@ -158,23 +159,32 @@ def findCompassDirFromPointToPoint(source, dest):
     directions = [ 'up', 'down', 'left', 'right' ]
     if source["x"] < dest["x"]:
         # Go Right
-        directions.remove('left')
+        if 'left' in directions:
+            directions.remove('left')
     elif source["x"] > dest["x"]:
         # Go Left
-        directions.remove('right')
+        if 'right' in directions:
+            directions.remove('right')
     else:
-        directions.remove('up')
-        directions.remove('down')
+        # We are on same X axis -> go straight left or right
+        if 'up' in directions:
+            directions.remove('up')
+        if 'down' in directions:
+            directions.remove('down')
         
     if source["y"] < dest["y"]:
         # Go down
-        directions.remove('up')
+        if 'up' in directions:
+            directions.remove('up')
     elif source["y"] > dest["y"]:
         # Go up
-        directions.remove('down')
+        if 'down' in directions:
+            directions.remove('down')
     else:
-        directions.remove('right')
-        directions.remove('left')
+        if 'right' in directions:
+            directions.remove('right')
+        if 'left' in directions:
+            directions.remove('left')
     return directions
     
 # Expose WSGI app (so gunicorn can find it)
