@@ -38,6 +38,8 @@ def move():
     data = bottle.request.json
     # TODO: Do things with data
     
+    print "My Head:"
+    print data["you"]["body"][0]
     forbidden_dirs = checkWrongDirs(data)
     print "Forbidden dirs: "
     print forbidden_dirs
