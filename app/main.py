@@ -122,7 +122,7 @@ def chooseDir(data, dirs):
     nearestApple = findNearestApple(data)
     dirsToApple = findCompassDirFromPointToPoint(head, nearestApple)
     
-    print "Dirs to neares apple"
+    print "Dirs to nearest apple"
     print dirsToApple
     
     goodDirs = []
@@ -156,20 +156,25 @@ def calculateDistance(pointa, pointb):
 
 def findCompassDirFromPointToPoint(source, dest):
     directions = [ 'up', 'down', 'left', 'right' ]
-    if source["x"] <= dest["x"]:
+    if source["x"] < dest["x"]:
         # Go Right
         directions.remove('left')
-    else:
+    elif source["x"] > dest["x"]:
         # Go Left
         directions.remove('right')
+    else:
+        directions.remove('up')
+        directions.remove('down')
         
-    if source["y"] <= dest["y"]:
+    if source["y"] < dest["y"]:
         # Go down
         directions.remove('up')
-    else:
+    elif source["y"] > dest["y"]:
         # Go up
         directions.remove('down')
-    
+    else:
+        directions.remove('right')
+        directions.remove('left')
     return directions
     
 # Expose WSGI app (so gunicorn can find it)
