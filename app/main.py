@@ -141,7 +141,6 @@ def chooseDir(data, dirs):
         return random.choice(dirs)
     
 def findNearestApple(head, apples):
-    head = data["you"]["body"][0]
     nearestApple = apples[0]
     shortestDistance = calculateDistance(nearestApple, head)
     for apple in apples:
