@@ -3,6 +3,7 @@ import os
 import random
 import json
 import pprint
+import snake
 
 from api import *
 
@@ -30,26 +31,14 @@ def start():
     
     print "Starting game %s" % data["game"]["id"]
     print json.dumps(data, sort_keys=True, indent=4)
-    return StartResponse("#00ff00")
+    return StartResponse("#00ffff")
 
 
 @bottle.post('/move')
 def move():
     data = bottle.request.json
     # TODO: Do things with data
-    
-    print "My Head:"
-    print data["you"]["body"][0]
-    forbidden_dirs = checkWrongDirs(data)
-    print "Forbidden dirs: "
-    print forbidden_dirs
-    
-    directions = [ 'up', 'down', 'left', 'right' ]
-    for dir in forbidden_dirs:
-        directions.remove(dir)
-    
-    #direction = random.choice(directions)
-    direction = chooseDir(data, directions)
+    direction = snake.doAction(data)
 
     print "Moving %s" % direction
     return MoveResponse(direction)
@@ -60,138 +49,13 @@ def end():
     data = bottle.request.json
 
     # TODO: Do things with data
-    print json.dumps(data["you"], sort_keys=True, indent=4)
+    print json.dumps(len(data["you"]["body"]), sort_keys=True, indent=4)
 
     print "Game %s ended" % data["game"]["id"]
-
-def checkWrongDirs(data):
-    forbidden_dirs = []
-    forbidden_spaces = []
-    head = data["you"]["body"][0]
-    
-    for snake in data["board"]["snakes"]:
-        forbidden_spaces.extend(snake["body"])
-        
-        #Add forbidden spaces next to larger snake' heads
-        if snake["id"] != data["you"]["id"]:
-            if len(snake["body"]) >= len(data["you"]["body"]):
-                print "snake %s (%s) is larger -> avoid" % (snake["name"], snake["id"])
-                forbidden_spaces.append({
-                                            "x": snake["body"][0]["x"] - 1,
-                                            "y": snake["body"][0]["y"]
-                                        })
-                forbidden_spaces.append({
-                                            "x": snake["body"][0]["x"] + 1,
-                                            "y": snake["body"][0]["y"]
-                                        })
-                forbidden_spaces.append({
-                                            "x": snake["body"][0]["x"],
-                                            "y": snake["body"][0]["y"] - 1
-                                        })
-                forbidden_spaces.append({
-                                            "x": snake["body"][0]["x"],
-                                            "y": snake["body"][0]["y"] + 1
-                                        })
-        
-    #Left
-    if {
-        "x": head["x"] - 1,
-        "y": head["y"]
-    } in forbidden_spaces or head["x"] == 0:
-        forbidden_dirs.extend(['left'])
-    
-    #Right
-    if {
-        "x": head["x"] + 1,
-        "y": head["y"]
-    } in forbidden_spaces or head["x"] == data["board"]["width"] - 1:
-        forbidden_dirs.extend(['right'])
-    #Up
-    if {
-        "x": head["x"],
-        "y": head["y"] - 1
-    } in forbidden_spaces or head["y"] == 0:
-        forbidden_dirs.extend(['up'])
-    #Down
-    if {
-        "x": head["x"],
-        "y": head["y"] + 1
-    } in forbidden_spaces or head["y"] == data["board"]["height"] - 1:
-        forbidden_dirs.extend(['down'])
-    return forbidden_dirs
-
-def chooseDir(data, dirs):
-    head = data["you"]["body"][0]
-    nearestApple = findNearestApple(head, data["board"]["food"])
-    dirsToApple = findCompassDirFromPointToPoint(head, nearestApple)
-    
-    print "Dirs to nearest apple"
-    print dirsToApple
-    
-    goodDirs = []
-    for dir in dirs:
-        if dir in dirsToApple:
-            goodDirs.extend([dir])
-    
-    print "GoodDirs:"
-    print goodDirs
-    if len(goodDirs) > 0:
-        return random.choice(goodDirs)
-    else:
-        return random.choice(dirs)
-    
-def findNearestApple(head, apples):
-    nearestApple = apples[0]
-    shortestDistance = calculateDistance(nearestApple, head)
-    for apple in apples:
-        if calculateDistance(apple, head) < shortestDistance:
-            nearestApple = apple
-            shortestDistance = calculateDistance(apple, head)
-    print "NearestApple:"
-    print nearestApple
-    print "Distance:"
-    print shortestDistance
-    return nearestApple
-    
-def calculateDistance(pointa, pointb):
-    return abs(pointa["x"] - pointb["x"]) + abs(pointa["y"] - pointb["y"])
-
-def findCompassDirFromPointToPoint(source, dest):
-    directions = [ 'up', 'down', 'left', 'right' ]
-    if source["x"] < dest["x"]:
-        # Go Right
-        if 'left' in directions:
-            directions.remove('left')
-    elif source["x"] > dest["x"]:
-        # Go Left
-        if 'right' in directions:
-            directions.remove('right')
-    else:
-        # We are on same X axis -> go straight up or down
-        if 'left' in directions:
-            directions.remove('left')
-        if 'right' in directions:
-            directions.remove('right')
-        
-    if source["y"] < dest["y"]:
-        # Go down
-        if 'up' in directions:
-            directions.remove('up')
-    elif source["y"] > dest["y"]:
-        # Go up
-        if 'down' in directions:
-            directions.remove('down')
-    else:
-        # We are on same Y axis -> go straight left or right
-        if 'up' in directions:
-            directions.remove('up')
-        if 'down' in directions:
-            directions.remove('down')
-    return directions
     
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
-
+snake = snake.snake()
 if __name__ == '__main__':
     bottle.run(
         application,
