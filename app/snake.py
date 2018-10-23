@@ -2,6 +2,8 @@
 import random
 import json
 import pprint
+import point
+import helpers
 
 class snake:
     def __init__(self):
@@ -11,7 +13,7 @@ class snake:
         self.distanceToNearestApple = 100000000000
         self.target = { "x": 0, "y": 0 }
     def doAction(self, data):
-        self.head = data["you"]["body"][0]
+        self.head = point.topoint(data["you"]["body"][0])
         self.data = data
         
         #if self.target == self.head or not self.target in self.data["board"]["food"]:
@@ -40,12 +42,16 @@ class snake:
         print "Head: "
         print self.head
         
+        self.forbidden_points = []
+        self.getForbiddenPoints()
         forbidden_dirs = self.checkWrongDirs()
         
         self.findNearestApple()
-        self.target = self.nearestApple
+        self.target = point.topoint(self.nearestApple)
         print "Target:"
         print self.target
+        print "Forbidden dirs:"
+        print forbidden_dirs
         
         directions = [ 'up', 'down', 'left', 'right' ]
         for dir in forbidden_dirs:
@@ -53,58 +59,51 @@ class snake:
         
         #direction = random.choice(directions)
         return self.chooseDir(directions)
-    
-    def checkWrongDirs(self):
-        forbidden_dirs = []
-        forbidden_spaces = []
+    def getForbiddenPoints(self):
+        points = []
         
         for snake in self.data["board"]["snakes"]:
-            forbidden_spaces.extend(snake["body"])
+            if not snake["health"] == 0:
+                points.extend(snake["body"])
+        
+        #Add upper & lower limits
+        for i in range(0, self.data["board"]["width"]):
+            points.append(point.point(i,-1))
+            points.append(point.point(i,self.data["board"]["height"]))
+        
+        #Add right and left limits
+        for i in range(0, self.data["board"]["height"]):
+            points.append(point.point(-1,i))
+            points.append(point.point(self.data["board"]["width"],i))
             
+        self.forbidden_points = points
+        
+    def checkWrongDirs(self):
+        forbidden_dirs = []
+        forbidden_spaces = self.forbidden_points
+        for snake in self.data["board"]["snakes"]:
             #Add forbidden spaces next to larger snake' heads
             if snake["id"] != self.data["you"]["id"]:
                 if len(snake["body"]) >= len(self.data["you"]["body"]):
-                    forbidden_spaces.append({
-                                                "x": snake["body"][0]["x"] - 1,
-                                                "y": snake["body"][0]["y"]
-                                            })
-                    forbidden_spaces.append({
-                                                "x": snake["body"][0]["x"] + 1,
-                                                "y": snake["body"][0]["y"]
-                                            })
-                    forbidden_spaces.append({
-                                                "x": snake["body"][0]["x"],
-                                                "y": snake["body"][0]["y"] - 1
-                                            })
-                    forbidden_spaces.append({
-                                                "x": snake["body"][0]["x"],
-                                                "y": snake["body"][0]["y"] + 1
-                                            })
-            
+                    forbidden_spaces.append(point.topoint(snake["body"][0]) + helpers.dirs_matrices['left'])
+                    forbidden_spaces.append(point.topoint(snake["body"][0]) + helpers.dirs_matrices['right'])
+                    forbidden_spaces.append(point.topoint(snake["body"][0]) + helpers.dirs_matrices['up'])
+                    forbidden_spaces.append(point.topoint(snake["body"][0]) + helpers.dirs_matrices['down'])
+        
+        
+        #Translate forbidden_spaces into forbidden_dirs (directions that would cause immediate death, no-go dirs)
         #Left
-        if {
-            "x": self.head["x"] - 1,
-            "y": self.head["y"]
-        } in forbidden_spaces or self.head["x"] == 0:
+        if self.head + helpers.dirs_matrices['left'] in forbidden_spaces:
             forbidden_dirs.extend(['left'])
         
         #Right
-        if {
-            "x": self.head["x"] + 1,
-            "y": self.head["y"]
-        } in forbidden_spaces or self.head["x"] == self.data["board"]["width"] - 1:
+        if self.head + helpers.dirs_matrices['right'] in forbidden_spaces:
             forbidden_dirs.extend(['right'])
         #Up
-        if {
-            "x": self.head["x"],
-            "y": self.head["y"] - 1
-        } in forbidden_spaces or self.head["y"] == 0:
+        if self.head + helpers.dirs_matrices['up'] in forbidden_spaces:
             forbidden_dirs.extend(['up'])
         #Down
-        if {
-            "x": self.head["x"],
-            "y": self.head["y"] + 1
-        } in forbidden_spaces or self.head["y"] == self.data["board"]["height"] - 1:
+        if self.head + helpers.dirs_matrices['down'] in forbidden_spaces:
             forbidden_dirs.extend(['down'])
         return forbidden_dirs
     
@@ -138,32 +137,31 @@ class snake:
         
     def findNearestApple(self):
         apples = self.data["board"]["food"]
-        distanceToNearestApple = 10000000
+        distanceToNearestApple = 10000000 # fugly but works
         for apple in apples:
-            if self.calculateDistance(apple, self.head) < distanceToNearestApple:
+            pointFromHeadToaApple = self.head - apple
+            if pointFromHeadToaApple.dist() < distanceToNearestApple:
                 self.nearestApple = apple
-                distanceToNearestApple = self.calculateDistance(apple, self.head)
+                distanceToNearestApple = pointFromHeadToaApple.dist()
                 self.distanceToNearestApple = distanceToNearestApple
         
     def findNearestAppleToPoint(self, point):
         apples = self.data["board"]["food"]
-        distanceToNearestApple = 10000000
+        distanceToNearestApple = 10000000 # fugly but works
         for apple in apples:
-            if self.calculateDistance(apple, point) < distanceToNearestApple:
+            fromPointToApple = point - apple
+            if fromPointToApple.dist() < distanceToNearestApple:
                 nearestApple = apple
-                distanceToNearestApple = self.calculateDistance(apple, nearestApple)
+                distanceToNearestApple = fromPointToApple.dist()
         return nearestApple
-    
-    def calculateDistance(self, pointa, pointb):
-        return abs(pointa["x"] - pointb["x"]) + abs(pointa["y"] - pointb["y"])
     
     def findCompassDirFromPointToPoint(self, source, dest):
         directions = [ 'up', 'down', 'left', 'right' ]
-        if source["x"] < dest["x"]:
+        if source.x < dest.x:
             # Go Right
             if 'left' in directions:
                 directions.remove('left')
-        elif source["x"] > dest["x"]:
+        elif source.x > dest.x:
             # Go Left
             if 'right' in directions:
                 directions.remove('right')
@@ -174,11 +172,11 @@ class snake:
             if 'right' in directions:
                 directions.remove('right')
             
-        if source["y"] < dest["y"]:
+        if source.y < dest.y:
             # Go down
             if 'up' in directions:
                 directions.remove('up')
-        elif source["y"] > dest["y"]:
+        elif source.y > dest.y:
             # Go up
             if 'down' in directions:
                 directions.remove('down')
@@ -189,3 +187,11 @@ class snake:
             if 'down' in directions:
                 directions.remove('down')
         return directions
+        
+    #def findFarthestDeadEnd(self, dirs):
+    #    dir_space = {}
+    #    
+    #    while True:
+    #        for dir in dirs:
+    #            #find contiguous segment
+    #            if self.head + dirs_matrix['left'] in self.forbidden_points
