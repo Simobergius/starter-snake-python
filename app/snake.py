@@ -53,9 +53,12 @@ class snake:
         print "Forbidden dirs:"
         print forbidden_dirs
         
-        directions = [ 'up', 'down', 'left', 'right' ]
+        directions = list(helpers.basic_dirs)
+        print "helpers.basic_dirs"
+        print helpers.basic_dirs
         for dir in forbidden_dirs:
-            directions.remove(dir)
+            if dir in directions:
+                directions.remove(dir)
         
         #direction = random.choice(directions)
         return self.chooseDir(directions)
@@ -109,14 +112,20 @@ class snake:
     
     def chooseDir(self, dirs):
         dirsToTarget = self.findCompassDirFromPointToPoint(self.head, self.target)
-        
+        print "checkWrongDirs"
+        print "dirs"
+        print dirs
+        print "dirsToTarget"
+        print dirsToTarget
         goodDirs = []
         for dir in dirs:
             if dir in dirsToTarget:
-                goodDirs.extend([dir])
+                goodDirs.append(dir)
                 
         print "Good dirs:"
         print goodDirs
+        
+        #TODO: Use findFarthestDeadEnd to choose dir when multiple choices
         
         if len(goodDirs) > 0:
             if self.lastDir in goodDirs:
@@ -188,10 +197,31 @@ class snake:
                 directions.remove('down')
         return directions
         
-    #def findFarthestDeadEnd(self, dirs):
-    #    dir_space = {}
-    #    
-    #    while True:
-    #        for dir in dirs:
-    #            #find contiguous segment
-    #            if self.head + dirs_matrix['left'] in self.forbidden_points
+    def findFarthestDeadEnd(self, dirs):
+        dir_space = {k: [] for k in dirs}
+        
+        while True:
+            for dir in dirs:
+                new_point_found = False
+                #find contiguous segment, keep count
+                for point in dir_space[dir]:
+                    #find one valid point next to some other point in list
+                    for basic_dir in helpers.basic_dirs:
+                        newpoint = point + dirs_matrix[basic_dir]
+                        if not (newpoint in self.forbidden_points or point + dirs_matrix[basic_dir] in dir_space[dir]):
+                            #TODO: Check here if point is already in other dirs' continuous segments?
+                            dirs_space[dir].append(newpoint)
+                            new_point_found = True
+                            break
+                    if new_point_found:
+                        break
+                if new_point_found:
+                    break
+                else:
+                    # No new point found for a dirs' continuous segment -> finished -> choose some other dir
+                    del dir_space[dir]
+                if len(dir_space) == 1:
+                    # One valid dir remaining
+                    return dir_space.keys()
+                
+                
