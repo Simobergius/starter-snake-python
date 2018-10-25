@@ -44,9 +44,46 @@ class point:
     def dist(self):
         return abs(self.x) + abs(self.y)
 
+    def rotateCCW(self):
+        #left (-1, 0)   -> down (0, 1)
+        #up (0, -1)     -> left (-1, 0)
+        #right (1, 0)   -> up (0, -1)
+        #down (0, 1)    -> right (1, 0)
+        return point(self.y, -self.x)
+
+    def rotateCW(self):
+        #left (-1, 0)   -> up (0, -1)
+        #up (0, -1)     -> right (1, 0)
+        #right (1, 0)   -> down (0, 1)
+        #down (0, 1)    -> left (-1, 0)
+        return point(-self.y, self.x)
+
+    def todir(self):
+        if self.x == 0 and self.y > 0:
+            return 'down'
+        elif self.x == 0 and self.y < 0:
+            return 'up'
+        elif self.x < 0 and self.y == 0:
+            return 'left'
+        elif self.x > 0 and self.y == 0:
+            return 'right'
+        else:
+            return ''
+
 def topoint(data):
     if isinstance(data, dict):
         if 'x' in data and 'y' in data:
             return point(data['x'], data['y'])
+    elif isinstance(data, str):
+        if data == 'left':
+            return point(-1,0)
+        elif data == 'up':
+            return point(0,-1)
+        elif data == 'down':
+            return point(0,1)
+        elif data == 'right':
+            return point(1,0)
+        else:
+            return NotImplemented
     else:
         return NotImplemented
