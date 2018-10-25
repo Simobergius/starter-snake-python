@@ -1,64 +1,27 @@
 import snake
+import test_data
 
-data = {
-    'board': {
-        'snakes': [
-            {'body': [
-                {'x': 5, 'y': 5}, 
-                {'x': 5, 'y': 6},
-                {'x': 4, 'y': 6},
-                {'x': 3, 'y': 6},
-                {'x': 3, 'y': 5},
-                {'x': 3, 'y': 4},
-                {'x': 4, 'y': 4},
-                {'x': 5, 'y': 4},
-                {'x': 6, 'y': 4},
-                {'x': 7, 'y': 4}
-               ], 
-               'health': 100,
-               'id': 'testsnake',
-               'length': 10,
-               'name': 'testsnake',
-               'object': 'snake'
-            }
-        ],
-        'height': 10,
-        'width': 10,
-        'food': [
-                {'x': 2, 'y': 2},
-        ]
-    },
-    'you': {
-        'body': [
-            {'x': 5, 'y': 5}, 
-            {'x': 5, 'y': 6},
-            {'x': 4, 'y': 6},
-            {'x': 3, 'y': 6},
-            {'x': 3, 'y': 5},
-            {'x': 3, 'y': 4},
-            {'x': 4, 'y': 6},
-            {'x': 5, 'y': 6},
-            {'x': 6, 'y': 6},
-            {'x': 7, 'y': 6}
-        ], 
-        'health': 100,
-        'id': 'testsnake',
-        'length': 10,
-        'name': 'testsnake',
-        'object': 'snake'
-    }
-}        
-        
-#interface World {
-#  object: 'world';
-#  id: number;
-#  you: Snake;
-#  snakes: List<Snake>;
-#  height: number;
-#  width: number;
-#  turn: number;
-#  food: List<Point>;
-#}
-snake = snake.snake()
+def doTest(test, expected):
+    print("Starting test case")
+    snake_under_test = snake.snake(False)
+    result = test(snake_under_test)
+    if not result in expected:
+        print("TEST FAIL!: expected '%s' Got: '%s'" % (expected, result))
+    else:
+        print("TEST PASS!")
 
-print(snake.doAction(data))
+def test(snake):
+    return snake.doAction(test_data.data1)
+
+def test2(snake):
+    return snake.doAction(test_data.data2)
+
+def test3(snake):
+    return snake.doAction(test_data.data3)
+
+
+
+#doTest(test, ['right'])
+#doTest(test2, ['right'])
+doTest(test3, ['up','down'])
+

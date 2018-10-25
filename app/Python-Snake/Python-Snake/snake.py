@@ -6,16 +6,23 @@ import point
 import helpers
 
 class snake:
-    def __init__(self):
+    def __init__(self, useDebug):
         self.lastDir = 'up'
         self.strategy = 'eat'
         self.nearestApple = { "x": 0, "y": 0 }
         self.distanceToNearestApple = 100000000000
         self.target = { "x": 0, "y": 0 }
+        self.useDebug = useDebug
+
+    def debug(self, str):
+        if self.useDebug:
+            print(str)
+
     def doAction(self, data):
         self.head = point.topoint(data["you"]["body"][0])
         self.data = data
-        
+        #Figure out direction im heading
+        self.lastDir = (self.head - point.topoint(data["you"]["body"][1])).todir()
         #if self.target == self.head or not self.target in self.data["board"]["food"]:
         #    #When target reached or target is not apple
         #    #Use current position to choose next target
@@ -36,11 +43,11 @@ class snake:
         #            #Lower right -> find apple in upper right
         #            self.target = self.findNearestAppleToPoint({ "x": data["board"]["width"], "y": 0})
         #        
-        #    print("Changing target, new:")
-        #    print(self.target)
+        #    self.debug("Changing target, new:")
+        #    self.debug(self.target)
         
-        print("Head: ")
-        print(self.head)
+        self.debug("Head: ")
+        self.debug(self.head)
         
         self.forbidden_points = []
         self.getForbiddenPoints()
@@ -48,14 +55,14 @@ class snake:
         
         self.findNearestApple()
         self.target = point.topoint(self.nearestApple)
-        print("Target:")
-        print(self.target)
-        print("Forbidden dirs:")
-        print(forbidden_dirs)
+        self.debug("Target:")
+        self.debug(self.target)
+        self.debug("Forbidden dirs:")
+        self.debug(forbidden_dirs)
         
         directions = list(helpers.basic_dirs)
-        print("helpers.basic_dirs")
-        print(helpers.basic_dirs)
+        self.debug("helpers.basic_dirs")
+        self.debug(helpers.basic_dirs)
         for dir in forbidden_dirs:
             if dir in directions:
                 directions.remove(dir)
@@ -113,39 +120,38 @@ class snake:
     
     def chooseDir(self, dirs):
         dirsToTarget = self.findCompassDirFromPointToPoint(self.head, self.target)
-        print("checkWrongDirs")
-        print("dirs")
-        print(dirs)
-        print("dirsToTarget")
-        print(dirsToTarget)
+        self.debug("checkWrongDirs")
+        self.debug("dirs")
+        self.debug(dirs)
+        self.debug("dirsToTarget")
+        self.debug(dirsToTarget)
         
         #TODO: Use findFarthestDeadEnd to choose dir when multiple choices
         # check points in front of head
         point_in_front = self.head + point.topoint(self.lastDir)
         turn_ccw_dir = (point.topoint(self.lastDir).rotateCCW()).todir()
         turn_cw_dir = (point.topoint(self.lastDir).rotateCW()).todir()
-        go_straight_dir = point.topoint(self.lastDir).todir()
         
         if point_in_front in self.forbidden_points:
             # counterclockwise or clockwise
             dirs = self.findFarthestDeadEnd([turn_ccw_dir, turn_cw_dir])
         elif point_in_front + point.topoint(self.lastDir).rotateCCW() in self.forbidden_points and point_in_front + point.topoint(self.lastDir).rotateCW() in self.forbidden_points:
             #straight, counterclockwise or clockwise
-            dirs = self.findFarthestDeadEnd([turn_ccw_dir, turn_cw_dir, go_straight_dir])
+            dirs = self.findFarthestDeadEnd([turn_ccw_dir, turn_cw_dir, self.lastDir])
         elif point_in_front + point.topoint(self.lastDir).rotateCCW() in self.forbidden_points:
             # straight or counterclockwise
-            dirs = self.findFarthestDeadEnd([turn_ccw_dir, go_straight_dir])
+            dirs = self.findFarthestDeadEnd([turn_ccw_dir, self.lastDir])
         elif point_in_front + point.topoint(self.lastDir).rotateCW() in self.forbidden_points:
             # straight or clockwise
-            dirs = self.findFarthestDeadEnd([go_straight_dir, turn_cw_dir])
+            dirs = self.findFarthestDeadEnd([self.lastDir, turn_cw_dir])
         
         goodDirs = []
         for dir in dirs:
             if dir in dirsToTarget:
                 goodDirs.append(dir)
                 
-        print("Good dirs:")
-        print(goodDirs)
+        self.debug("Good dirs:")
+        self.debug(goodDirs)
         
         
         if len(goodDirs) > 0:
@@ -160,8 +166,6 @@ class snake:
                 chosenDir = random.choice(dirs)
         
         self.nextGameState = self.data
-            
-        self.lastDir = chosenDir
         
         return chosenDir
         
@@ -219,44 +223,55 @@ class snake:
         return directions
         
     def findFarthestDeadEnd(self, dirs):
-        print("findFarthestDeadEnd(dirs=%s)" % str(dirs))
+        self.debug("findFarthestDeadEnd(dirs=%s)" % str(dirs))
         #Remove dirs that are immediately blocked
         for dir in dirs:
             if self.head + point.topoint(dir) in self.forbidden_points:
                 dirs.remove(dir)
 
-        dirs_space = {k: [self.head + point.topoint(k)] for k in dirs}
-        
+        contiguous_spaces = {k: [self.head + point.topoint(k)] for k in dirs}
+        border_spaces = {k: [self.head + point.topoint(k)] for k in dirs}
+        possible_dirs = []
         while True:
             for dir in dirs:
+                if len(contiguous_spaces) == 1:
+                    # One valid dir remaining
+                    possible_dirs.extend(list(contiguous_spaces.keys()))
+                    return possible_dirs
                 new_point_found = False
                 #find contiguous segment, keep count
-                for pointvar in dirs_space[dir]:
-                    #find one valid point next to some other point in list
-                    for basic_dir in helpers.basic_dirs:
+                for pointvar in border_spaces[dir]:
+                    #find one valid point next to border point in list
+                    for i, basic_dir in enumerate(helpers.basic_dirs):
                         newpoint = pointvar + point.topoint(basic_dir)
                         #check if point is already in a segment
                         newpoint_in_other_segments = False
-                        for dir in dirs_space:
-                            if newpoint in dirs_space[dir]:
-                                newpoint_in_other_segments = True
-                                break
+                        for dir2 in contiguous_spaces:
+                            if dir2 == dir:
+                                continue
+                            if newpoint in contiguous_spaces[dir2]:
+                                #Check here if point is already in other dirs' continuous segments -> remove other
+                                #Keep it as possible
+                                possible_dirs.append(dir2)
+                                del contiguous_spaces[dir2]
 
                         if not (newpoint in self.forbidden_points or newpoint_in_other_segments):
-                            #TODO: Check here if point is already in other dirs' continuous segments -> combine segments or remove one? ?
-                            #This is actually breaking
-                            dirs_space[dir].append(newpoint)
+                            contiguous_spaces[dir].append(newpoint)
+                            border_spaces[dir].append(newpoint)
                             new_point_found = True
-                            break
+
+                        if i == len(helpers.basic_dirs) - 1:
+                            #If all 4 dirs have been checked and no new point found
+                            #Remove from border
+                            del border_spaces[dir][pointvar]
+                        break
                     if new_point_found:
                         break
                 if new_point_found:
                     break
                 else:
                     # No new point found for a dirs' continuous segment -> finished -> choose some other dir
-                    del dirs_space[dir]
-                if len(dirs_space) == 1:
-                    # One valid dir remaining
-                    return dirs_space.keys()
+                    self.debug("Deleting segment: %s %s" % (dir, str(contiguous_spaces[dir])))
+                    del contiguous_spaces[dir]
                 
                 
