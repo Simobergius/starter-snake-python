@@ -4,6 +4,7 @@ import random
 import json
 import pprint
 import snake
+import time
 
 from api import *
 
@@ -38,7 +39,7 @@ def start():
 def move():
     data = bottle.request.json
     # TODO: Do things with data
-    direction = snake.doAction(data)
+    direction = snek.doAction(data)
 
     print("Moving %s" % direction)
     return MoveResponse(direction)
@@ -48,14 +49,16 @@ def move():
 def end():
     data = bottle.request.json
 
-    # TODO: Do things with data
+    #Write data to file
+    file = open("./results/result-%s.json" % time.strftime("%Y%m%H%M%S"), "w")
+    file.write(str(data))
     print(json.dumps(len(data["you"]["body"]), sort_keys=True, indent=4))
 
     print("Game %s ended" % data["game"]["id"])
     
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
-snake = snake.snake()
+snek = snake.snake(True)
 if __name__ == '__main__':
     bottle.run(
         application,
