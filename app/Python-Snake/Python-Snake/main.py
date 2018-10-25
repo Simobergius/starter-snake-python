@@ -52,6 +52,8 @@ def end():
     #Write data to file
     file = open("./results/result-%s.json" % time.strftime("%Y%m%H%M%S"), "w")
     file.write(str(data))
+    file.close()
+
     print(json.dumps(len(data["you"]["body"]), sort_keys=True, indent=4))
 
     print("Game %s ended" % data["game"]["id"])
