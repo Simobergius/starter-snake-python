@@ -126,6 +126,19 @@ class snake:
         print goodDirs
         
         #TODO: Use findFarthestDeadEnd to choose dir when multiple choices
+        # check points in front of head
+        
+        if self.head + point.topoint(self.lastDir) in self.forbidden_points:
+            # counterclockwise or clockwise
+            
+        if self.head + point.topoint(self.lastDir) + point.topoint(self.lastDir).rotateCCW() in self.forbidden_points and self.head + point.topoint(self.lastDir) + point.topoint(self.lastDir).rotateCW() in self.forbidden_points:
+            #straight, counterclockwise or clockwise, exclude later two
+        elif self.head + point.topoint(self.lastDir) + point.topoint(self.lastDir).rotateCCW() in self.forbidden_points:
+            # straight or counterclockwise
+        elif self.head + point.topoint(self.lastDir) + point.topoint(self.lastDir).rotateCW() in self.forbidden_points:
+            # straight or clockwise
+        
+        
         
         if len(goodDirs) > 0:
             if self.lastDir in goodDirs:
