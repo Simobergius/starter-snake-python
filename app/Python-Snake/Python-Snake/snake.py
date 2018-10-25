@@ -144,7 +144,8 @@ class snake:
         elif point_in_front + point.topoint(self.lastDir).rotateCW() in self.forbidden_points:
             # straight or counterclockwise
             dirs = self.findFarthestDeadEnd([self.lastDir, turn_ccw_dir])
-        
+        self.debug("Dirs:")
+        self.debug(dirs)
         goodDirs = []
         for dir in dirs:
             if dir in dirsToTarget:
