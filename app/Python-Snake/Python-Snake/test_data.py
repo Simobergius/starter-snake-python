@@ -176,3 +176,38 @@ data4 = {
         'object': 'snake'
     }
 }
+
+data5 = {
+    'board': {
+        'snakes': [
+            {'body': [
+                {'x': 3, 'y': 0}, 
+                {'x': 3, 'y': 0}, 
+                {'x': 3, 'y': 0}
+               ], 
+               'health': 100,
+               'id': 'testsnake',
+               'length': 3,
+               'name': 'testsnake',
+               'object': 'snake'
+            }
+        ],
+        'height': 10,
+        'width': 10,
+        'food': [
+                {'x': 1, 'y': 1},
+        ]
+    },
+    'you': {
+        'body': [
+            {'x': 3, 'y': 0}, 
+            {'x': 3, 'y': 0}, 
+            {'x': 3, 'y': 0}
+        ], 
+        'health': 100,
+        'id': 'testsnake',
+        'length': 3,
+        'name': 'testsnake',
+        'object': 'snake'
+    }
+}

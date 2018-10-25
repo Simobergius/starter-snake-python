@@ -24,9 +24,12 @@ def test3(snake):
 def test4(snake):
     return snake.doAction(test_data.data4)
 
+def test5(snake):
+    return snake.doAction(test_data.data5)
 
 
 doTest(test, ['right'])
 doTest(test2, ['right'])
 doTest(test3, ['up','down'])
 doTest(test4, ['down'])
+doTest(test5, ['down', 'left', 'right'])
