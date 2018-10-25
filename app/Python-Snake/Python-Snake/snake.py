@@ -139,11 +139,11 @@ class snake:
             #straight, counterclockwise or clockwise
             dirs = self.findFarthestDeadEnd([turn_ccw_dir, turn_cw_dir, self.lastDir])
         elif point_in_front + point.topoint(self.lastDir).rotateCCW() in self.forbidden_points:
-            # straight or counterclockwise
-            dirs = self.findFarthestDeadEnd([turn_ccw_dir, self.lastDir])
-        elif point_in_front + point.topoint(self.lastDir).rotateCW() in self.forbidden_points:
             # straight or clockwise
-            dirs = self.findFarthestDeadEnd([self.lastDir, turn_cw_dir])
+            dirs = self.findFarthestDeadEnd([turn_cw_dir, self.lastDir])
+        elif point_in_front + point.topoint(self.lastDir).rotateCW() in self.forbidden_points:
+            # straight or counterclockwise
+            dirs = self.findFarthestDeadEnd([self.lastDir, turn_ccw_dir])
         
         goodDirs = []
         for dir in dirs:
@@ -239,13 +239,14 @@ class snake:
                     possible_dirs.extend(list(contiguous_spaces.keys()))
                     return possible_dirs
                 new_point_found = False
+                points_to_remove = []
                 #find contiguous segment, keep count
                 for pointvar in border_spaces[dir]:
                     #find one valid point next to border point in list
                     for i, basic_dir in enumerate(helpers.basic_dirs):
                         newpoint = pointvar + point.topoint(basic_dir)
                         #check if point is already in a segment
-                        newpoint_in_other_segments = False
+                        dirs_to_remove = []
                         for dir2 in contiguous_spaces:
                             if dir2 == dir:
                                 continue
@@ -253,9 +254,10 @@ class snake:
                                 #Check here if point is already in other dirs' continuous segments -> remove other
                                 #Keep it as possible
                                 possible_dirs.append(dir2)
-                                del contiguous_spaces[dir2]
-
-                        if not (newpoint in self.forbidden_points or newpoint_in_other_segments):
+                                dirs_to_remove.append(dir2)
+                        for dir2 in dirs_to_remove:
+                            del contiguous_spaces[dir2]
+                        if not (newpoint in self.forbidden_points or newpoint in contiguous_spaces[dir]):
                             contiguous_spaces[dir].append(newpoint)
                             border_spaces[dir].append(newpoint)
                             new_point_found = True
@@ -263,10 +265,13 @@ class snake:
                         if i == len(helpers.basic_dirs) - 1:
                             #If all 4 dirs have been checked and no new point found
                             #Remove from border
-                            del border_spaces[dir][pointvar]
-                        break
+                            points_to_remove.append(pointvar)
+                        if new_point_found:
+                            break
                     if new_point_found:
                         break
+                for pointvar in points_to_remove:
+                    border_spaces[dir].remove(pointvar)
                 if new_point_found:
                     break
                 else:
