@@ -46,13 +46,21 @@ def test6(snake):
 def test7(snake):
     return snake.doAction(test_data.data7)
 
-#doTest(test, ['right'])
-#doTest(test2, ['right'])
-#doTest(test3, ['up','down'])
-#doTest(test4, ['down'])
-#doTest(test5, ['down', 'left', 'right'])
-#doTest(test52, ['down', 'up', 'right'])
-#doTest(test53, ['up', 'left', 'right'])
-#doTest(test54, ['down', 'left', 'up'])
-#doTest(test6, ['up'])
+def test8(snake):
+    return snake.doAction(test_data.data8)
+
+def test9(snake):
+    return snake.doAction(test_data.data9)
+
+doTest(test, ['right'])
+doTest(test2, ['right'])
+doTest(test3, ['up','down'])
+doTest(test4, ['down'])
+doTest(test5, ['down', 'left', 'right'])
+doTest(test52, ['down', 'up', 'right'])
+doTest(test53, ['up', 'left', 'right'])
+doTest(test54, ['down', 'left', 'up'])
+doTest(test6, ['up'])
 doTest(test7, ['left'])
+doTest(test8, ['left', 'right'])
+doTest(test9, ['up', 'right'])
