@@ -211,3 +211,206 @@ data5 = {
         'object': 'snake'
     }
 }
+
+data52 = {
+    'board': {
+        'snakes': [
+            {'body': [
+                {'x': 0, 'y': 3}, 
+                {'x': 0, 'y': 3}, 
+                {'x': 0, 'y': 3}
+               ], 
+               'health': 100,
+               'id': 'testsnake',
+               'length': 3,
+               'name': 'testsnake',
+               'object': 'snake'
+            }
+        ],
+        'height': 10,
+        'width': 10,
+        'food': [
+                {'x': 1, 'y': 1},
+        ]
+    },
+    'you': {
+        'body': [
+            {'x': 0, 'y': 3}, 
+            {'x': 0, 'y': 3}, 
+            {'x': 0, 'y': 3}
+        ], 
+        'health': 100,
+        'id': 'testsnake',
+        'length': 3,
+        'name': 'testsnake',
+        'object': 'snake'
+    }
+}
+
+data53 = {
+    'board': {
+        'snakes': [
+            {'body': [
+                {'x': 3, 'y': 9}, 
+                {'x': 3, 'y': 9}, 
+                {'x': 3, 'y': 9}
+               ], 
+               'health': 100,
+               'id': 'testsnake',
+               'length': 3,
+               'name': 'testsnake',
+               'object': 'snake'
+            }
+        ],
+        'height': 10,
+        'width': 10,
+        'food': [
+                {'x': 1, 'y': 1},
+        ]
+    },
+    'you': {
+        'body': [
+            {'x': 3, 'y': 9}, 
+            {'x': 3, 'y': 9}, 
+            {'x': 3, 'y': 9}
+        ], 
+        'health': 100,
+        'id': 'testsnake',
+        'length': 3,
+        'name': 'testsnake',
+        'object': 'snake'
+    }
+}
+
+data54 = {
+    'board': {
+        'snakes': [
+            {'body': [
+                {'x': 9, 'y': 3}, 
+                {'x': 9, 'y': 3}, 
+                {'x': 9, 'y': 3}
+               ], 
+               'health': 100,
+               'id': 'testsnake',
+               'length': 3,
+               'name': 'testsnake',
+               'object': 'snake'
+            }
+        ],
+        'height': 10,
+        'width': 10,
+        'food': [
+                {'x': 1, 'y': 1},
+        ]
+    },
+    'you': {
+        'body': [
+            {'x': 9, 'y': 3}, 
+            {'x': 9, 'y': 3}, 
+            {'x': 9, 'y': 3}
+        ], 
+        'health': 100,
+        'id': 'testsnake',
+        'length': 3,
+        'name': 'testsnake',
+        'object': 'snake'
+    }
+}
+
+data6 = {
+    'board': {
+        'snakes': [
+            {'body': [
+                {'x': 0, 'y': 7}, 
+                {'x': 0, 'y': 8}, 
+                {'x': 1, 'y': 8}, 
+                {'x': 1, 'y': 7}, 
+                {'x': 1, 'y': 6}, 
+                {'x': 1, 'y': 5}, 
+                {'x': 1, 'y': 4}
+               ], 
+               'health': 100,
+               'id': 'testsnake',
+               'length': 7,
+               'name': 'testsnake',
+               'object': 'snake'
+            }
+        ],
+        'height': 10,
+        'width': 10,
+        'food': [
+                {'x': 5, 'y': 8},
+        ]
+    },
+    'you': {
+        'body': [
+            {'x': 0, 'y': 7}, 
+            {'x': 0, 'y': 8}, 
+            {'x': 1, 'y': 8}, 
+            {'x': 1, 'y': 7}, 
+            {'x': 1, 'y': 6}, 
+            {'x': 1, 'y': 5}, 
+            {'x': 1, 'y': 4}
+        ], 
+        'health': 100,
+        'id': 'testsnake',
+        'length': 7,
+        'name': 'testsnake',
+        'object': 'snake'
+    }
+}
+
+data7 = {
+    'board': {
+        'snakes': [
+            {'body': [
+                {'x': 4, 'y': 2}, 
+                {'x': 4, 'y': 1}, 
+                {'x': 5, 'y': 1}, 
+                {'x': 5, 'y': 2}, 
+                {'x': 5, 'y': 3}, 
+                {'x': 5, 'y': 4}, 
+                {'x': 5, 'y': 5}, 
+                {'x': 4, 'y': 5}, 
+                {'x': 3, 'y': 5}, 
+                {'x': 3, 'y': 4}, 
+                {'x': 3, 'y': 3}, 
+                {'x': 2, 'y': 3}, 
+                {'x': 1, 'y': 3}
+               ], 
+               'health': 100,
+               'id': 'testsnake',
+               'length': 13,
+               'name': 'testsnake',
+               'object': 'snake'
+            }
+        ],
+        'height': 10,
+        'width': 10,
+        'food': [
+                {'x': 5, 'y': 8},
+        ]
+    },
+    'you': {
+        'body': [
+            {'x': 4, 'y': 2}, 
+            {'x': 4, 'y': 1}, 
+            {'x': 5, 'y': 1}, 
+            {'x': 5, 'y': 2}, 
+            {'x': 5, 'y': 3}, 
+            {'x': 5, 'y': 4}, 
+            {'x': 5, 'y': 5}, 
+            {'x': 4, 'y': 5}, 
+            {'x': 3, 'y': 5}, 
+            {'x': 3, 'y': 4}, 
+            {'x': 3, 'y': 3}, 
+            {'x': 2, 'y': 3}, 
+            {'x': 1, 'y': 3}
+        ], 
+        'health': 100,
+        'id': 'testsnake',
+        'length': 7,
+        'name': 'testsnake',
+        'object': 'snake'
+    }
+}
