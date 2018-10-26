@@ -54,7 +54,7 @@ def end():
     file.write(json.dumps(data, sort_keys=True, indent=4))
     file.close()
 
-    print(json.dumps(len(data["you"]["body"]), sort_keys=True, indent=4))
+    print(len(data["you"]["body"]))
 
     print("Game %s ended" % data["game"]["id"])
     

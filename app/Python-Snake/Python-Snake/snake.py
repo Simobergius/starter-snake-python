@@ -13,6 +13,7 @@ class snake:
         self.distanceToNearestApple = 100000000000
         self.target = { "x": 0, "y": 0 }
         self.useDebug = useDebug
+        self.length = 0
 
     def debug(self, str):
         if self.useDebug:
@@ -21,6 +22,7 @@ class snake:
     def doAction(self, data):
         self.head = point.topoint(data["you"]["body"][0])
         self.data = data
+        self.length = len(data["you"]["body"])
         #Figure out direction im heading
         if data["you"]["body"][1] != data["you"]["body"][0]:
             self.lastDir = (self.head - point.topoint(data["you"]["body"][1])).todir()
@@ -68,8 +70,7 @@ class snake:
         self.debug(forbidden_dirs)
         
         directions = list(helpers.basic_dirs)
-        self.debug("helpers.basic_dirs")
-        self.debug(helpers.basic_dirs)
+
         for dir in forbidden_dirs:
             if dir in directions:
                 directions.remove(dir)
@@ -247,11 +248,20 @@ class snake:
         border_spaces = {k: [self.head + point.topoint(k)] for k in dirs}
         possible_dirs = []
         while True:
+            if len(dirs) == 0:
+                return
             for dir in dirs:
                 if len(contiguous_spaces) == 1:
                     # One valid dir remaining
                     possible_dirs.extend(list(contiguous_spaces.keys()))
                     return possible_dirs
+
+                #if dead end is "farther" than body length -> dont care, return dir
+                if len(contiguous_spaces[dir]) > self.length:
+                    possible_dirs.append(dir)
+                    del contiguous_spaces[dir]
+                    continue
+
                 new_point_found = False
                 points_to_remove = []
                 #find contiguous segment, keep count
