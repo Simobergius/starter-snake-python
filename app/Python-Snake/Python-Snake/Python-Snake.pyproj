@@ -26,6 +26,9 @@
     <Compile Include="main.py" />
     <Compile Include="point.py" />
     <Compile Include="snake.py" />
+    <Compile Include="test-point.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="testing.py" />
     <Compile Include="test_data.py" />
   </ItemGroup>
