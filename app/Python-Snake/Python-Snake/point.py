@@ -32,6 +32,8 @@ class point:
         elif isinstance(other, dict):
             if 'x' in other and 'y' in other:
                 return self.x == other['x'] and self.y == other['y']
+        else: 
+            return NotImplemented
 
     def __ne__(self, other):
         if isinstance(other, point):

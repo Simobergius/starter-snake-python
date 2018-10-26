@@ -22,30 +22,37 @@ class snake:
         self.head = point.topoint(data["you"]["body"][0])
         self.data = data
         #Figure out direction im heading
-        self.lastDir = (self.head - point.topoint(data["you"]["body"][1])).todir()
-        #if self.target == self.head or not self.target in self.data["board"]["food"]:
+        if data["you"]["body"][1] != data["you"]["body"][0]:
+            self.lastDir = (self.head - point.topoint(data["you"]["body"][1])).todir()
+
+        #if self.target == self.head or not self.target in
+        #self.data["board"]["food"]:
         #    #When target reached or target is not apple
         #    #Use current position to choose next target
         #    if self.head["x"] < self.data["board"]["width"] / 2:
         #        #Left side of map
         #        if self.head["y"] < self.data["board"]["height"] / 2:
         #            #Upper Left -> find apple in lower right
-        #            self.target = self.findNearestAppleToPoint({ "x": 0, "y": data["board"]["height"]})
+        #            self.target = self.findNearestAppleToPoint({ "x": 0, "y":
+        #            data["board"]["height"]})
         #        else:
         #            #Lower left -> find apple in lower right
-        #            self.target = self.findNearestAppleToPoint({ "x": data["board"]["width"], "y": data["board"]["height"]})
+        #            self.target = self.findNearestAppleToPoint({ "x":
+        #            data["board"]["width"], "y": data["board"]["height"]})
         #    else:
         #        #Right side of map
         #        if self.head["y"] < self.data["board"]["height"] / 2:
         #            #Upper right -> find apple in upper left
-        #            self.target = self.findNearestAppleToPoint({ "x": 0, "y": 0})
+        #            self.target = self.findNearestAppleToPoint({ "x": 0, "y":
+        #            0})
         #        else:
         #            #Lower right -> find apple in upper right
-        #            self.target = self.findNearestAppleToPoint({ "x": data["board"]["width"], "y": 0})
-        #        
+        #            self.target = self.findNearestAppleToPoint({ "x":
+        #            data["board"]["width"], "y": 0})
+        #
         #    self.debug("Changing target, new:")
         #    self.debug(self.target)
-        
+
         self.debug("Head: ")
         self.debug(self.head)
         
@@ -102,7 +109,8 @@ class snake:
         
 
         
-        #Translate forbidden_spaces into forbidden_dirs (directions that would cause immediate death, no-go dirs)
+        #Translate forbidden_spaces into forbidden_dirs (directions that would
+        #cause immediate death, no-go dirs)
         #Left
         if self.head + point.topoint('left') in forbidden_spaces:
             forbidden_dirs.extend(['left'])
@@ -191,7 +199,7 @@ class snake:
         return nearestApple
     
     def findCompassDirFromPointToPoint(self, source, dest):
-        directions = [ 'up', 'down', 'left', 'right' ]
+        directions = ['up', 'down', 'left', 'right']
         if source.x < dest.x:
             # Go Right
             if 'left' in directions:
@@ -226,9 +234,14 @@ class snake:
     def findFarthestDeadEnd(self, dirs):
         self.debug("findFarthestDeadEnd(dirs=%s)" % str(dirs))
         #Remove dirs that are immediately blocked
+        dirs_to_remove = []
         for dir in dirs:
             if self.head + point.topoint(dir) in self.forbidden_points:
-                dirs.remove(dir)
+                dirs_to_remove.append(dir)
+
+        for dir in dirs_to_remove:
+            dirs.remove(dir)
+        dirs_to_remove = []
 
         contiguous_spaces = {k: [self.head + point.topoint(k)] for k in dirs}
         border_spaces = {k: [self.head + point.topoint(k)] for k in dirs}
@@ -252,7 +265,8 @@ class snake:
                             if dir2 == dir:
                                 continue
                             if newpoint in contiguous_spaces[dir2]:
-                                #Check here if point is already in other dirs' continuous segments -> remove other
+                                #Check here if point is already in other dirs'
+                                #continuous segments -> remove other
                                 #Keep it as possible
                                 possible_dirs.append(dir2)
                                 dirs_to_remove.append(dir2)
@@ -264,7 +278,8 @@ class snake:
                             new_point_found = True
 
                         if i == len(helpers.basic_dirs) - 1:
-                            #If all 4 dirs have been checked and no new point found
+                            #If all 4 dirs have been checked and no new point
+                            #found
                             #Remove from border
                             points_to_remove.append(pointvar)
                         if new_point_found:
@@ -274,9 +289,10 @@ class snake:
                 for pointvar in points_to_remove:
                     border_spaces[dir].remove(pointvar)
                 if new_point_found:
-                    break
+                    continue
                 else:
-                    # No new point found for a dirs' continuous segment -> finished -> choose some other dir
+                    # No new point found for a dirs' continuous segment ->
+                    # finished -> choose some other dir
                     self.debug("Deleting segment: %s %s" % (dir, str(contiguous_spaces[dir])))
                     del contiguous_spaces[dir]
                 
