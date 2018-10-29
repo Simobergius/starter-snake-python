@@ -4,6 +4,8 @@ import random
 import json
 import pprint
 import snake
+import time
+import sys
 
 from api import *
 
@@ -31,14 +33,14 @@ def start():
     
     print("Starting game %s" % data["game"]["id"])
     print(json.dumps(data, sort_keys=True, indent=4))
-    return StartResponse("#00ffff")
+    return StartResponse(argcolor)
 
 
 @bottle.post('/move')
 def move():
     data = bottle.request.json
     # TODO: Do things with data
-    direction = snake.doAction(data)
+    direction = snek.doAction(data)
 
     print("Moving %s" % direction)
     return MoveResponse(direction)
@@ -48,17 +50,33 @@ def move():
 def end():
     data = bottle.request.json
 
-    # TODO: Do things with data
-    print(json.dumps(len(data["you"]["body"]), sort_keys=True, indent=4))
+    #Write data to file
+    file = open("./results/result-%s.json" % time.strftime("%Y%m%H%M%S"), "w")
+    file.write(json.dumps(data, sort_keys=True, indent=4))
+    file.close()
+
+    print("Final length: %i" % len(data["you"]["body"]))
 
     print("Game %s ended" % data["game"]["id"])
     
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
-snake = snake.snake()
+argcolor = '#0000ff'
+argport = '8080'
+for i, arg in enumerate(sys.argv):
+    if arg == '-c':
+        if len(sys.argv) > i:
+            argcolor = '#%s' % sys.argv[i + 1]
+        else:
+            print("Please give a color value")
+    if arg == '-p':
+        if len(sys.argv) > i:
+            argport = sys.argv[i + 1]
+
+snek = snake.snake(True)
 if __name__ == '__main__':
     bottle.run(
         application,
         host=os.getenv('IP', '0.0.0.0'),
-        port=os.getenv('PORT', '8080'),
+        port=os.getenv('PORT', argport),
         debug=True)
