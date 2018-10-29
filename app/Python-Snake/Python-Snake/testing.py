@@ -4,7 +4,7 @@ import time
 import sys
 
 def doTest(test, expected):
-    print("Starting test case %s" % str(test))
+    print("Starting test case %s" % str(test.__name__))
     snake_under_test = snake.snake(False)
     start_time = time.time()
     try:
@@ -52,15 +52,21 @@ def test8(snake):
 def test9(snake):
     return snake.doAction(test_data.data9)
 
-doTest(test, ['right'])
-doTest(test2, ['right'])
-doTest(test3, ['up','down'])
-doTest(test4, ['down'])
-doTest(test5, ['down', 'left', 'right'])
-doTest(test52, ['down', 'up', 'right'])
-doTest(test53, ['up', 'left', 'right'])
-doTest(test54, ['down', 'left', 'up'])
-doTest(test6, ['up'])
-doTest(test7, ['left'])
-doTest(test8, ['left', 'right'])
-doTest(test9, ['up', 'right'])
+# In this dictionary are tests and their accepted results
+tests =  {
+    test: ['right'],
+    test2: ['right'],
+    test3: ['up','down'],
+    test4: ['down'],
+    test5: ['down', 'left', 'right'],
+    test52: ['down', 'up', 'right'],
+    test53: ['up', 'left', 'right'],
+    test54: ['down', 'left', 'up'],
+    test6: ['up'],
+    test7: ['left'],
+    test8: ['left', 'right'],
+    test9: ['up', 'right']
+    }
+
+for test in tests:
+    doTest(test, tests[test])
