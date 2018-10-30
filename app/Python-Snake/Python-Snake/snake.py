@@ -20,12 +20,12 @@ class snake:
             print(str)
 
     def doAction(self, data):
-        self.head = point.topoint(data["you"]["body"][0])
+        self.head = point.point(data["you"]["body"][0])
         self.data = data
         self.length = len(data["you"]["body"])
         #Figure out direction im heading
         if data["you"]["body"][1] != data["you"]["body"][0]:
-            self.lastDir = (self.head - point.topoint(data["you"]["body"][1])).todir()
+            self.lastDir = (self.head - point.point(data["you"]["body"][1])).todir()
 
         #if self.target == self.head or not self.target in
         #self.data["board"]["food"]:
@@ -63,7 +63,7 @@ class snake:
         forbidden_dirs = self.checkWrongDirs()
         
         self.findNearestApple()
-        self.target = point.topoint(self.nearestApple)
+        self.target = point.point(self.nearestApple)
         self.debug("Target:")
         self.debug(self.target)
         self.debug("Forbidden dirs:")
@@ -103,27 +103,27 @@ class snake:
             #Add forbidden spaces next to larger snake' heads
             if snake["id"] != self.data["you"]["id"]:
                 if len(snake["body"]) >= len(self.data["you"]["body"]):
-                    forbidden_spaces.append(point.topoint(snake["body"][0]) + point.topoint('left'))
-                    forbidden_spaces.append(point.topoint(snake["body"][0]) + point.topoint('right'))
-                    forbidden_spaces.append(point.topoint(snake["body"][0]) + point.topoint('up'))
-                    forbidden_spaces.append(point.topoint(snake["body"][0]) + point.topoint('down'))
+                    forbidden_spaces.append(point.point(snake["body"][0]) + point.point('left'))
+                    forbidden_spaces.append(point.point(snake["body"][0]) + point.point('right'))
+                    forbidden_spaces.append(point.point(snake["body"][0]) + point.point('up'))
+                    forbidden_spaces.append(point.point(snake["body"][0]) + point.point('down'))
         
 
         
         #Translate forbidden_spaces into forbidden_dirs (directions that would
         #cause immediate death, no-go dirs)
         #Left
-        if self.head + point.topoint('left') in forbidden_spaces:
+        if self.head + point.point('left') in forbidden_spaces:
             forbidden_dirs.extend(['left'])
         
         #Right
-        if self.head + point.topoint('right') in forbidden_spaces:
+        if self.head + point.point('right') in forbidden_spaces:
             forbidden_dirs.extend(['right'])
         #Up
-        if self.head + point.topoint('up') in forbidden_spaces:
+        if self.head + point.point('up') in forbidden_spaces:
             forbidden_dirs.extend(['up'])
         #Down
-        if self.head + point.topoint('down') in forbidden_spaces:
+        if self.head + point.point('down') in forbidden_spaces:
             forbidden_dirs.extend(['down'])
         return forbidden_dirs
     
@@ -137,20 +137,20 @@ class snake:
         
         #TODO: Use findFarthestDeadEnd to choose dir when multiple choices
         # check points in front of head
-        point_in_front = self.head + point.topoint(self.lastDir)
-        turn_ccw_dir = (point.topoint(self.lastDir).rotateCCW()).todir()
-        turn_cw_dir = (point.topoint(self.lastDir).rotateCW()).todir()
+        point_in_front = self.head + point.point(self.lastDir)
+        turn_ccw_dir = (point.point(self.lastDir).rotateCCW()).todir()
+        turn_cw_dir = (point.point(self.lastDir).rotateCW()).todir()
         
         if point_in_front in self.forbidden_points:
             # counterclockwise or clockwise
             dirs = self.findFarthestDeadEnd([turn_ccw_dir, turn_cw_dir])
-        elif point_in_front + point.topoint(self.lastDir).rotateCCW() in self.forbidden_points and point_in_front + point.topoint(self.lastDir).rotateCW() in self.forbidden_points:
+        elif point_in_front + point.point(self.lastDir).rotateCCW() in self.forbidden_points and point_in_front + point.point(self.lastDir).rotateCW() in self.forbidden_points:
             #straight, counterclockwise or clockwise
             dirs = self.findFarthestDeadEnd([turn_ccw_dir, turn_cw_dir, self.lastDir])
-        elif point_in_front + point.topoint(self.lastDir).rotateCCW() in self.forbidden_points:
+        elif point_in_front + point.point(self.lastDir).rotateCCW() in self.forbidden_points:
             # straight or clockwise
             dirs = self.findFarthestDeadEnd([turn_cw_dir, self.lastDir])
-        elif point_in_front + point.topoint(self.lastDir).rotateCW() in self.forbidden_points:
+        elif point_in_front + point.point(self.lastDir).rotateCW() in self.forbidden_points:
             # straight or counterclockwise
             dirs = self.findFarthestDeadEnd([self.lastDir, turn_ccw_dir])
         self.debug("Dirs:")
@@ -237,15 +237,15 @@ class snake:
         #Remove dirs that are immediately blocked
         dirs_to_remove = []
         for dir in dirs:
-            if self.head + point.topoint(dir) in self.forbidden_points:
+            if self.head + point.point(dir) in self.forbidden_points:
                 dirs_to_remove.append(dir)
 
         for dir in dirs_to_remove:
             dirs.remove(dir)
         dirs_to_remove = []
 
-        contiguous_spaces = {k: [self.head + point.topoint(k)] for k in dirs}
-        border_spaces = {k: [self.head + point.topoint(k)] for k in dirs}
+        contiguous_spaces = {k: [self.head + point.point(k)] for k in dirs}
+        border_spaces = {k: [self.head + point.point(k)] for k in dirs}
         possible_dirs = []
         while True:
             if len(dirs) == 0:
@@ -268,7 +268,7 @@ class snake:
                 for pointvar in border_spaces[dir]:
                     #find one valid point next to border point in list
                     for i, basic_dir in enumerate(helpers.basic_dirs):
-                        newpoint = pointvar + point.topoint(basic_dir)
+                        newpoint = pointvar + point.point(basic_dir)
                         #check if point is already in a segment
                         dirs_to_remove = []
                         for dir2 in contiguous_spaces:

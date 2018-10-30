@@ -1,8 +1,32 @@
 
 class point:
-    def __init__(self,x, y):
-        self.x = x
-        self.y = y
+    def __init__(self,x, y=0):
+        if isinstance(x, int) and isinstance(y, int):
+            self.x = x
+            self.y = y
+        elif isinstance(x, str):
+            if x == 'right':
+                self.x = 1
+                self.y = 0
+            elif x == 'up':
+                self.x = 0
+                self.y = -1
+            elif x == 'left':
+                self.x = -1
+                self.y = 0
+            elif x == 'down':
+                self.x = 0
+                self.y = 1
+            else:
+                raise NotImplementedError
+        elif isinstance(x, dict):
+            if 'x' in x and 'y' in x:
+                self.x = x['x']
+                self.y = x['y']
+            else:
+                raise NotImplementedError
+        else:
+            raise NotImplementedError
     
     def __add__(self, other):
         if isinstance(other, point):

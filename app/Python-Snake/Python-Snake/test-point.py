@@ -52,10 +52,10 @@ if sdic in points:
 else:
     print("%s not in list" % str(sdic))
 
-print("topoint(%s) = %s" % (str(oneone), str(point.topoint(oneone))))
+print("point(%s) = %s" % (str(oneone), str(point.point(oneone))))
 
 for dir in dirs:
-    print("topoint(%s) = %s" % (dir, str(point.topoint(dir))))
+    print("point(%s) = %s" % (dir, str(point.point(dir))))
 
 negpoint = point.point(-5,-5)
 print("dist:")
@@ -65,5 +65,5 @@ print("%s.dist() = %s" % (str(negpoint), str(negpoint.dist())))
 
 print("Rotate:")
 for dir in dirs:
-    print("%s rotated CCW: %s" % (dir, point.topoint(dir).rotateCCW().todir()))
-    print("%s rotated CW: %s" % (dir, point.topoint(dir).rotateCW().todir()))
+    print("%s rotated CCW: %s" % (dir, point.point(dir).rotateCCW().todir()))
+    print("%s rotated CW: %s" % (dir, point.point(dir).rotateCW().todir()))
