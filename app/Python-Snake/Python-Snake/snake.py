@@ -112,6 +112,7 @@ class snake:
         
         #Translate forbidden_spaces into forbidden_dirs (directions that would
         #cause immediate death, no-go dirs)
+
         #Left
         if self.head + point.point('left') in forbidden_spaces:
             forbidden_dirs.extend(['left'])
