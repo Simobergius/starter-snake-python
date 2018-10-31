@@ -51,6 +51,8 @@ def test8(snake):
 
 def test9(snake):
     return snake.doAction(test_data.data9)
+def test10(snake):
+    return snake.doAction(test_data.data_dead_end_with_tail)
 
 # In this dictionary are tests and their accepted results
 tests =  {
@@ -65,7 +67,8 @@ tests =  {
     test6: ['up'],
     test7: ['left'],
     test8: ['left', 'right'],
-    test9: ['up', 'right']
+    test9: ['up', 'right'],
+    test10: ['right']
     }
 
 for test in tests:
