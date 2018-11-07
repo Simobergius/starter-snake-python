@@ -6,6 +6,7 @@ import pprint
 import snake
 import time
 import sys
+import filewriter
 
 from api import *
 
@@ -31,6 +32,8 @@ def start():
 
     # TODO: Do things with data
     
+    fw.setDir("results/%s" % time.strftime("%Y%m%H%M%S"))
+
     print("Starting game %s" % data["game"]["id"])
     print(json.dumps(data, sort_keys=True, indent=4))
     return StartResponse(argcolor)
@@ -40,7 +43,15 @@ def start():
 def move():
     data = bottle.request.json
     # TODO: Do things with data
-    direction = snek.doAction(data)
+    # TODO: Catch errors and write game state to file when error happens
+    # TODO: Write to file in different thread
+    try:
+        direction = snek.doAction(data)
+    except:
+        e = sys.exc_info[0]
+        writeFile(e, json.dumps(data, sort_keys=True, indent=4))
+
+
 
     print("Moving %s" % direction)
     return MoveResponse(direction)
@@ -51,14 +62,15 @@ def end():
     data = bottle.request.json
 
     #Write data to file
-    file = open("./results/result-%s.json" % time.strftime("%Y%m%H%M%S"), "w")
-    file.write(json.dumps(data, sort_keys=True, indent=4))
-    file.close()
+    writeFile("end", json.dumps(data, sort_keys=True, indent=4))
 
     print("Final length: %i" % len(data["you"]["body"]))
 
     print("Game %s ended" % data["game"]["id"])
     
+def writeFile(filename, data):
+    fw.write(filename, data)
+
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
 argcolor = '#0000ff'
@@ -74,6 +86,7 @@ for i, arg in enumerate(sys.argv):
             argport = sys.argv[i + 1]
 
 snek = snake.snake(True)
+writer = filewriter.FileWriter()
 if __name__ == '__main__':
     bottle.run(
         application,
