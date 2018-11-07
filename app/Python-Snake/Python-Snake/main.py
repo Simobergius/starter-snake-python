@@ -32,7 +32,7 @@ def start():
 
     # TODO: Do things with data
     
-    fw.setDir("results/%s" % time.strftime("%Y%m%H%M%S"))
+    writer.setDir("results/%s" % time.strftime("%Y%m%H%M%S"))
 
     print("Starting game %s" % data["game"]["id"])
     print(json.dumps(data, sort_keys=True, indent=4))
@@ -48,7 +48,7 @@ def move():
     try:
         direction = snek.doAction(data)
     except:
-        e = sys.exc_info[0]
+        e = sys.exc_info()[0]
         writeFile(e, json.dumps(data, sort_keys=True, indent=4))
 
 
@@ -69,7 +69,7 @@ def end():
     print("Game %s ended" % data["game"]["id"])
     
 def writeFile(filename, data):
-    fw.write(filename, data)
+    writer.write(filename, data)
 
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
