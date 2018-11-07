@@ -255,11 +255,13 @@ class snake:
                 if len(contiguous_spaces) == 1:
                     # One valid dir remaining
                     possible_dirs.extend(list(contiguous_spaces.keys()))
+                    self.debug("Returning dirs: %s" % str(possible_dirs))
                     return possible_dirs
 
                 #if dead end is "farther" than body length -> dont care, return dir
                 if len(contiguous_spaces[dir]) > self.length:
                     possible_dirs.append(dir)
+                    self.debug("Adding segment to dirs (greater than length): %s %s" % (dir, str(contiguous_spaces[dir])))
                     del contiguous_spaces[dir]
                     continue
 
@@ -282,6 +284,7 @@ class snake:
                                 possible_dirs.append(dir2)
                                 dirs_to_remove.append(dir2)
                         for dir2 in dirs_to_remove:
+                            self.debug("Deleting segment (shared point): %s %s" % (dir, str(contiguous_spaces[dir2])))
                             del contiguous_spaces[dir2]
                         if not (newpoint in self.forbidden_points or newpoint in contiguous_spaces[dir]):
                             contiguous_spaces[dir].append(newpoint)
