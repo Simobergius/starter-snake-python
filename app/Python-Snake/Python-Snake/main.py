@@ -24,6 +24,7 @@ def static(path):
 @bottle.post('/start')
 def start():
     data = bottle.request.json
+    # TODO: Add snakes dynamically
 
     head_url = '%s://%s/static/head.png' % (
         bottle.request.urlparts.scheme,
@@ -31,6 +32,7 @@ def start():
     )
 
     # TODO: Do things with data
+    # TODO: Add new filewriter in case where multiple snakes are required/requested
     
     writer.setDir(["results", str(data["game"]["id"]), str(data["you"]["id"])])
 
@@ -44,7 +46,6 @@ def start():
 def move():
     data = bottle.request.json
     # TODO: Do things with data
-    # TODO: Catch errors and write game state to file when error happens
     # TODO: Write to file in different thread
     try:
         direction = snek.doAction(data)

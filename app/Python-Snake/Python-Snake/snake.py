@@ -6,7 +6,8 @@ import point
 import helpers
 
 class snake:
-    def __init__(self, useDebug):
+    def __init__(self, useDebug, name):
+        self.name = name
         self.lastDir = 'up'
         self.strategy = 'eat'
         self.nearestApple = { "x": 0, "y": 0 }
@@ -77,13 +78,16 @@ class snake:
         
         #direction = random.choice(directions)
         return self.chooseDir(directions)
+
     def getForbiddenPoints(self):
         points = []
         
         for snake in self.data["board"]["snakes"]:
+            # TODO: Implement snakeIsDead function
             if not snake["health"] == 0:
                 points.extend(snake["body"])
         
+        #TODO: Add static limits only first time
         #Add upper & lower limits
         for i in range(0, self.data["board"]["width"]):
             points.append(point.point(i,-1))
