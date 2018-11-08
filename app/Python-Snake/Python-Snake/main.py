@@ -32,9 +32,10 @@ def start():
 
     # TODO: Do things with data
     
-    writer.setDir("results/%s" % time.strftime("%Y%m%H%M%S"))
+    writer.setDir(["results", str(data["game"]["id"]), str(data["you"]["id"])])
 
     print("Starting game %s" % data["game"]["id"])
+    print("Snake id: %s" % data["you"]["id"])
     print(json.dumps(data, sort_keys=True, indent=4))
     return StartResponse(argcolor)
 
@@ -48,8 +49,8 @@ def move():
     try:
         direction = snek.doAction(data)
     except:
-        e = sys.exc_info()[0]
-        writeFile(e, json.dumps(data, sort_keys=True, indent=4))
+        e = sys.exc_info()[1]
+        writeFile(str(e) + "_" + str(data["turn"]), json.dumps(data, sort_keys=True, indent=4))
 
 
 
