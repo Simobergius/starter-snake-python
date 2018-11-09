@@ -64,7 +64,7 @@ def end():
     data = bottle.request.json
 
     #Write data to file
-    writeFile("end", json.dumps(data, sort_keys=True, indent=4))
+    writeFile("end_" + str(data["turn"]), json.dumps(data, sort_keys=True, indent=4))
 
     print("Final length: %i" % len(data["you"]["body"]))
 
@@ -87,7 +87,7 @@ for i, arg in enumerate(sys.argv):
         if len(sys.argv) > i:
             argport = sys.argv[i + 1]
 
-snek = snake.snake(True)
+snek = snake.snake(True, "name")
 writer = filewriter.FileWriter()
 if __name__ == '__main__':
     bottle.run(
