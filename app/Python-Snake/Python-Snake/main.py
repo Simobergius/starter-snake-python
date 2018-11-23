@@ -33,8 +33,8 @@ def start():
 
     # TODO: Do things with data
     # TODO: Add new filewriter in case where multiple snakes are required/requested
-    
-    writer.setDir(["results", str(data["game"]["id"]), str(data["you"]["id"])])
+    if debug:
+        writer.setDir(["results", str(data["game"]["id"]), str(data["you"]["id"])])
 
     print("Starting game %s" % data["game"]["id"])
     print("Snake id: %s" % data["you"]["id"])
@@ -71,12 +71,14 @@ def end():
     print("Game %s ended" % data["game"]["id"])
     
 def writeFile(filename, data):
-    writer.write(filename, data)
+    if debug:
+        writer.write(filename, data)
 
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
 argcolor = '#0000ff'
 argport = '8080'
+debug = True
 for i, arg in enumerate(sys.argv):
     if arg == '-c':
         if len(sys.argv) > i:
@@ -86,8 +88,9 @@ for i, arg in enumerate(sys.argv):
     if arg == '-p':
         if len(sys.argv) > i:
             argport = sys.argv[i + 1]
-
-snek = snake.snake(True, "name")
+    if arg == '--nodebug':
+        debug = False
+snek = snake.snake(debug, "name")
 writer = filewriter.FileWriter()
 if __name__ == '__main__':
     bottle.run(
